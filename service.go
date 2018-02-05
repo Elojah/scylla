@@ -7,7 +7,7 @@ import (
 // Service represents the scylla service.
 type Service struct {
 	cluster *gocql.ClusterConfig
-	session *gocql.Session
+	Session *gocql.Session
 }
 
 // Dial sends the new config to Service.
@@ -38,7 +38,7 @@ func (s *Service) Dial(c Config) error {
 	}
 
 	var err error
-	if s.session, err = s.cluster.CreateSession(); err != nil {
+	if s.Session, err = s.cluster.CreateSession(); err != nil {
 		return err
 	}
 	return nil
@@ -46,12 +46,12 @@ func (s *Service) Dial(c Config) error {
 
 // Close closes the session to cluster session.
 func (s *Service) Close() error {
-	s.session.Close()
+	s.Session.Close()
 	return nil
 }
 
 // Healthcheck returns if database responds.
 func (s *Service) Healthcheck() error {
-	q := s.session.Query(`SELECT dateof(now()) FROM system.local`)
+	q := s.Session.Query(`SELECT dateof(now()) FROM system.local`)
 	return q.Exec()
 }
